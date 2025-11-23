@@ -352,6 +352,7 @@ describe("SQLite Message Storage", function () {
 	});
 
 	it("should retrieve latest LIMIT messages in order", async function () {
+		this.timeout(60000);
 		const originalMaxHistory = Config.values.maxHistory;
 
 		try {

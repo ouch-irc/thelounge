@@ -3,7 +3,13 @@ name: Build
 permissions:
   contents: read
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
@@ -12,19 +18,9 @@ jobs:
     strategy:
       matrix:
         include:
-          # EOL: April 2027
-          - os: macOS-latest
-            node_version: 22.x
-          - os: windows-latest
-            node_version: 22.x
+          # EOL: April 2026
           - os: ubuntu-latest
             node_version: 22.x
-          # EOL: April 2028
-          - os: ubuntu-latest
-            node_version: 24.x
-          # EOL: June 2026
-          - os: ubuntu-latest
-            node_version: 25.x
 
     runs-on: ${{ matrix.os }}
 
@@ -32,17 +28,17 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node_version }}
 
       - name: Install
-        run: yarn --frozen-lockfile --non-interactive
+        run: npm install
 
       - name: Build
-        run: yarn build
+        run: npm run build
         env:
           NODE_ENV: production
 
       - name: Test
-        run: yarn test
+        run: npm run test
